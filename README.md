@@ -39,7 +39,7 @@ return [
     'clientSecret' => env('GOPAY_CLIENT_SECRET'),
     'defaultScope' => env('GOPAY_DEFAULT_SCOPE', 'ALL'),
     'gatewayUrl' => env('GOPAY_PRODUCTION_ENV', true) ? 
-        'https://gate.gopay.cz/api/' : 'https://gw.sandbox.gopay.com/api/',
+        'https://gate.gopay.cz/' : 'https://gw.sandbox.gopay.com/',
     'languages' => [ 
         'en' => 'ENGLISH',
         'sk' => 'SLOVAK',
