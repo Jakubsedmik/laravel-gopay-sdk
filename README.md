@@ -6,13 +6,19 @@
   - [Installation](#installation)
     - [Step 1: Install package](#step-1-install-package)
     - [Step 2: Configuration](#step-2-configuration)
+  - [Features](#features)
+    - [Languages](#languages)
+    - [Scopes](#scopes)
+    - [Events](#events)
   - [Usage/Examples](#usageexamples)
+    - [Facade GoPaySDK](#facade-gopaysdk)
+    - [Check Payment State](#check-payment-state)
   - [License](#license)
 
 ## Requirements
 
-- PHP >= 8.0
-- Laravel >= 8
+The GoPay SDK for Laravel package requires PHP 8.0+, Laravel 8+.
+
 ## Installation
 
 ### Step 1: Install package
@@ -58,7 +64,54 @@ return [
 
 Basic variables can be set in .env file.
 
+## Features
+
+### Languages
+
+You can set up payment gateway interface language when you creating new payment.
+
+Via GoPay Definition
+```php
+\GoPaySDK::lang(GoPay\Definition\Languages::CZECH)
+```
+
+Via Language Code
+```php
+\GoPaySDK::lang('cs')
+```
+
+Via String
+```php
+\GoPaySDK::lang('CZECH')
+```
+
+### Scopes
+
+Via GoPay Definition
+```php
+\GoPaySDK::scope(GoPay\Definition\TokenScope::CREATE_PAYMENT)
+```
+
+Via String
+```php
+\GoPay::scope('CREATE_PAYMENT')
+```
+
+### Events
+
+|  **Name**      |                     **Class**                    |
+|:--------------:|:------------------------------------------------:|
+| PaymentCreated | PavelZanek\LaravelGoPaySDK\Events\PaymentCreated |
+
+```php
+Event::listen(\PavelZanek\LaravelGoPaySDK\Events\PaymentCreated::class, function ($event) {
+    dd($event->payment);
+});
+```
+
 ## Usage/Examples
+
+### Facade GoPaySDK
 
 For example you can use facade `GoPaySDK` in a Controller to create standard payment:
 
@@ -137,7 +190,41 @@ class OrdersController extends Controller
 }
 ```
 
+### Check Payment State
+
+Here's a simple example of how you can get a payment status and how you can assign the status to an order.
+
+[List of possible payment states](https://doc.gopay.com/#state)
+
+```php
+
+use GoPaySDK;
+use App\Enums\Orders\OrderStatus;
+
+// your code
+
+$response = GoPaySDK::getStatus($order->gopay_payment_id);
+if(isset($response->json['state'])){
+
+    $status = match($response->json['state']) {
+        'CREATED' => OrderStatus::Waiting,
+        'PAID' => OrderStatus::Paid,
+        'CANCELED' => OrderStatus::Canceled,
+        'TIMEOUTED' => OrderStatus::Timeouted,
+        'REFUNDED' => OrderStatus::Refunded,
+        default => $response->json['state']
+    };
+
+    $order->update([
+        'status' => $status,
+    ]);
+}
+
+// rest of your code
+
+```
+
 ## License
 
 Copyright (c) Pavel Zaněk. MIT Licensed,
-see [LICENSE](/LICENSE) for details.
+see [LICENSE](LICENSE.md) for details.
