@@ -1,5 +1,5 @@
 {
-    "name": "pavelzanek/laravel-gopay-sdk",
+    "name": "jakubsedmik/laravel-gopay-sdk",
     "type": "library",
     "description": "GoPay SDK for Laravel",
     "keywords": [
@@ -10,9 +10,9 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Pavel Zaněk",
-            "email": "zanek.pavel@gmail.com",
-            "homepage": "https://pavelzanek.cz",
+            "name": "Jakub Sedmík",
+            "email": "info@studioseven.cz",
+            "homepage": "https://studioseven.cz",
             "role": "Developer"
         }
     ],
